@@ -1,0 +1,17 @@
+html {
+    background: #3e4451 !important;
+}
+
+.cont {
+    padding: 20px !important;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 3px 3px 5px #0000006e;
+    margin-bottom: 50px !important;
+}
+
+
+.form-label {
+    color: white;
+}
+
