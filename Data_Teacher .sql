@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 19, 2023 at 08:47 PM
+-- Generation Time: Nov 20, 2023 at 09:55 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -37,10 +37,11 @@ CREATE TABLE `CourseAverages` (
 --
 
 INSERT INTO `CourseAverages` (`CourseID`, `AVG_GPA`) VALUES
-(115, 93),
+(115, 79.1667),
 (116, 63),
 (117, 70.4),
-(118, 71.4);
+(118, 71.4),
+(121, 50);
 
 -- --------------------------------------------------------
 
@@ -63,7 +64,8 @@ INSERT INTO `Courses` (`CourseID`, `CourseName`, `CourseCredits`, `TeacherID`) V
 (115, 'Web Dev', 20, 6),
 (116, 'Data Structures', 15, 6),
 (117, 'Networks', 20, 6),
-(118, 'Mathematics', 15, 6);
+(118, 'Mathematics', 15, 6),
+(121, 'Database', 5, 6);
 
 -- --------------------------------------------------------
 
@@ -102,7 +104,12 @@ INSERT INTO `Scores` (`ScoreID`, `StudentID`, `CourseID`, `Score`) VALUES
 (140, 30, 116, 100),
 (141, 30, 117, 52),
 (142, 30, 118, 54),
-(143, 30, 115, 100);
+(143, 30, 115, 100),
+(144, 23, 121, 50),
+(145, 24, 121, 50),
+(146, 25, 121, 50),
+(147, 26, 121, 50),
+(148, 32, 115, 10);
 
 -- --------------------------------------------------------
 
@@ -125,22 +132,32 @@ INSERT INTO `StudentAverages` (`StudentID`, `CourseID`, `GPA`) VALUES
 (23, 116, 54),
 (23, 117, 10),
 (23, 118, 12),
+(23, 121, 50),
 (24, 115, 100),
 (24, 116, 68),
 (24, 117, 95),
 (24, 118, 92),
+(24, 121, 50),
 (25, 115, 65),
 (25, 116, 88),
 (25, 117, 95),
 (25, 118, 99),
+(25, 121, 50),
 (26, 115, 100),
 (26, 116, 55),
 (26, 117, 100),
 (26, 118, 100),
+(26, 121, 50),
 (30, 115, 100),
 (30, 116, 50),
 (30, 117, 52),
-(30, 118, 54);
+(30, 118, 54),
+(30, 121, NULL),
+(32, 115, 10),
+(32, 116, NULL),
+(32, 117, NULL),
+(32, 118, NULL),
+(32, 121, NULL);
 
 -- --------------------------------------------------------
 
@@ -180,7 +197,12 @@ INSERT INTO `StudentCourses` (`ScoreID`, `StudentID`, `TeacherID`, `CourseID`, `
 (50, 30, 6, 116, 50),
 (51, 30, 6, 117, 52),
 (52, 30, 6, 118, 54),
-(53, 30, 6, 115, 100);
+(53, 30, 6, 115, 100),
+(54, 23, 6, 121, 50),
+(55, 24, 6, 121, 50),
+(56, 25, 6, 121, 50),
+(57, 26, 6, 121, 50),
+(58, 32, 6, 115, 10);
 
 -- --------------------------------------------------------
 
@@ -205,7 +227,8 @@ INSERT INTO `Students` (`StudentID`, `FirstName`, `LastName`, `DateOfBirth`, `Te
 (24, 'Eirini', 'P', '1992-12-05', 6),
 (25, 'Miltos', 'P', '1993-05-12', 6),
 (26, 'Bruno', 'T', '1993-04-01', 6),
-(30, 'mailre', 'Test2', '2023-10-29', 6);
+(30, 'mailre', 'Test2', '2023-10-29', 6),
+(32, 'Pakhs', 'C', '1980-12-15', 6);
 
 -- --------------------------------------------------------
 
@@ -261,6 +284,8 @@ ALTER TABLE `Scores`
 --
 ALTER TABLE `StudentAverages`
   ADD PRIMARY KEY (`StudentID`,`CourseID`),
+  ADD UNIQUE KEY `unique_student_course` (`StudentID`,`CourseID`),
+  ADD UNIQUE KEY `unique_student_course_gpa` (`StudentID`,`CourseID`),
   ADD KEY `CourseID` (`CourseID`);
 
 --
@@ -292,25 +317,25 @@ ALTER TABLE `Teachers`
 -- AUTO_INCREMENT for table `Courses`
 --
 ALTER TABLE `Courses`
-  MODIFY `CourseID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
+  MODIFY `CourseID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
 -- AUTO_INCREMENT for table `Scores`
 --
 ALTER TABLE `Scores`
-  MODIFY `ScoreID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `ScoreID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
 
 --
 -- AUTO_INCREMENT for table `StudentCourses`
 --
 ALTER TABLE `StudentCourses`
-  MODIFY `ScoreID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `ScoreID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT for table `Students`
 --
 ALTER TABLE `Students`
-  MODIFY `StudentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `StudentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `Teachers`
