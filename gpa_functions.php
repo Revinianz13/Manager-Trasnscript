@@ -25,30 +25,40 @@ function updateCourseAverages($conn, $courseID) {
 }
 
 function calculateAndUpdateAllGPAs($conn) {
-    // Fetch all students and courses
+    
     $studentsQuery = "SELECT * FROM Students";
     $studentsResult = $conn->query($studentsQuery);
-    $allStudents = $studentsResult->fetch_all(MYSQLI_ASSOC);
 
     $coursesQuery = "SELECT * FROM Courses";
     $coursesResult = $conn->query($coursesQuery);
-    $allCourses = $coursesResult->fetch_all(MYSQLI_ASSOC);
 
-    // Calculate and update GPA and average GPA for all students and courses
-    foreach ($allStudents as $student) {
-        foreach ($allCourses as $course) {
-            // Calculate GPA for the student and course
+    if (!$studentsResult || !$coursesResult) {
+        echo "Error in fetching data";
+        return;
+    }
+
+    while ($student = $studentsResult->fetch_assoc()) {
+        $coursesResult->data_seek(0);
+        while ($course = $coursesResult->fetch_assoc()) {
             $gpa = calculateGPA($conn, $student['StudentID'], $course['CourseID']);
 
-            // Update or insert GPA into the StudentAverages table
-            $updateGpaQuery = "INSERT INTO `StudentAverages` (`StudentID`, `CourseID`, `GPA`) VALUES ('{$student['StudentID']}', '{$course['CourseID']}', $gpa) ON DUPLICATE KEY UPDATE `GPA` = $gpa";
-            $conn->query($updateGpaQuery);
+            // Use prepared statement to avoid syntax issues
+            $updateGpaQuery = $conn->prepare("INSERT INTO `StudentAverages` (`StudentID`, `CourseID`, `GPA`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `GPA` = ?");
+            $updateGpaQuery->bind_param('ssdd', $student['StudentID'], $course['CourseID'], $gpa, $gpa);
+            $updateGpaQuery->execute();
+
+            // Check for errors
+            if ($updateGpaQuery->errno) {
+                echo "Error: " . $updateGpaQuery->error;
+            }
 
             // Calculate and update average GPA for the course
             updateCourseAverages($conn, $course['CourseID']);
         }
     }
 }
+
+
 
 // Call the function to calculate and update all GPAs
 calculateAndUpdateAllGPAs($conn);

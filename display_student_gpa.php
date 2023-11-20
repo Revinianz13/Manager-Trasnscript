@@ -81,7 +81,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <?php foreach ($courseAverages as $courseID => $avg): ?>
                             <tr>
                                 <td><?php echo getCourseName($conn, $courseID); ?></td>
-                                <td><?php echo number_format($studentGPA[$courseID], 2); ?></td>
+                                <?php if (isset($studentGPA[$courseID])): ?>
+                                    <td><?php echo number_format($studentGPA[$courseID], 2); ?></td>
+                                <?php else: ?>
+                                    <td>Not Attended</td>
+                                <?php endif; ?>
                                 <td><?php echo number_format($avg, 2); ?></td>
                             </tr>
                         <?php endforeach; ?>
